@@ -1,6 +1,8 @@
 Forthcoming
 -----------
 
+* New Fast DDS Statistics module
+
 Version 2.2.0
 -------------
 
