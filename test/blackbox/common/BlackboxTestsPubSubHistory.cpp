@@ -249,6 +249,44 @@ TEST_P(PubSubHistory, PubSubAsReliableKeepLastWriterSmallDepth)
     reader.block_for_at_least(2);
 }
 
+TEST_P(PubSubHistory, PubSubAsReliableKeepAllReaderSmallDepth)
+{
+    PubSubReader<HelloWorldType> reader(TEST_TOPIC_NAME);
+    PubSubWriter<HelloWorldType> writer(TEST_TOPIC_NAME);
+
+    reader.reliability(RELIABLE_RELIABILITY_QOS).
+            history_kind(eprosima::fastrtps::KEEP_ALL_HISTORY_QOS).
+            history_depth(2).
+            resource_limits_allocated_samples(2).
+            resource_limits_max_samples(2).init();
+
+    ASSERT_TRUE(reader.isInitialized());
+
+    writer.history_kind(eprosima::fastrtps::KEEP_ALL_HISTORY_QOS).
+            history_depth(10).
+            resource_limits_extra_samples(10).init();
+
+    ASSERT_TRUE(writer.isInitialized());
+
+    // Because its volatile the durability
+    // Wait for discovery.
+    writer.wait_discovery();
+    reader.wait_discovery();
+
+    auto data = default_helloworld_data_generator();
+    auto received = data;
+
+    // Send data
+    writer.send(data);
+    // In this test all data should be sent.
+    ASSERT_TRUE(data.empty());
+
+    // All data should be received.
+    reader.startReception(received);
+    reader.block_for_all();
+    reader.stopReception();
+}
+
 // Test created to check bug #1558 (Github #33)
 TEST(PubSubHistory, PubSubKeepAll)
 {
