@@ -27,6 +27,7 @@
 #include <fastdds/rtps/builtin/data/WriterProxyData.h>
 #include <fastrtps/utils/TimedConditionVariable.hpp>
 #include "../history/ReaderHistory.h"
+#include <statistics/fastrtps/Listeners.hpp>
 
 #include <functional>
 
@@ -330,6 +331,24 @@ public:
     {
         return datasharing_listener_;
     }
+
+#ifdef FASTDDS_STATISTICS
+
+    /*
+     * Adds a listener to receive statistics backend callbacks
+     * @param listener
+     */
+    void add_statistics_listener(
+            std::shared_ptr<fastdds::statistics::IListener> listener);
+
+    /*
+     * Remove a listener to receive statistics backend callbacks
+     * @param listener
+     */
+    void remove_statistics_listener(
+            std::shared_ptr<fastdds::statistics::IListener> listener);
+
+#endif // FASTDDS_STATISTICS
 
 protected:
 

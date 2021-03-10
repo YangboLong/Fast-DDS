@@ -27,6 +27,7 @@
 #include <fastrtps/utils/collections/ResourceLimitedVector.hpp>
 #include <fastdds/rtps/common/LocatorSelector.hpp>
 #include <fastdds/rtps/messages/RTPSMessageSenderInterface.hpp>
+#include <statistics/fastrtps/Listeners.hpp>
 
 #include <vector>
 #include <memory>
@@ -273,6 +274,24 @@ public:
      */
     virtual void add_flow_controller(
             std::unique_ptr<FlowController> controller) = 0;
+
+#ifdef FASTDDS_STATISTICS
+
+    /*
+     * Adds a listener to receive statistics backend callbacks
+     * @param listener
+     */
+    void add_statistics_listener(
+            std::shared_ptr<fastdds::statistics::IListener> listener);
+
+    /*
+     * Remove a listener to receive statistics backend callbacks
+     * @param listener
+     */
+    void remove_statistics_listener(
+            std::shared_ptr<fastdds::statistics::IListener> listener);
+
+#endif // FASTDDS_STATISTICS
 
     /**
      * Get RTPS participant
