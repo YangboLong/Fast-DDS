@@ -246,6 +246,7 @@ RTPSWriter* RTPSDomain::createRTPSWriter(
         WriterHistory* hist,
         WriterListener* listen)
 {
+    std::lock_guard<std::mutex> guard(m_mutex);
     RTPSParticipantImpl* impl = RTPSDomainImpl::find_local_participant(p->getGuid());
     if (impl)
     {
@@ -266,6 +267,7 @@ RTPSWriter* RTPSDomain::createRTPSWriter(
         WriterHistory* hist,
         WriterListener* listen)
 {
+    std::lock_guard<std::mutex> guard(m_mutex);
     RTPSParticipantImpl* impl = RTPSDomainImpl::find_local_participant(p->getGuid());
     if (impl)
     {
@@ -304,6 +306,7 @@ RTPSReader* RTPSDomain::createRTPSReader(
         ReaderHistory* rhist,
         ReaderListener* rlisten)
 {
+    std::lock_guard<std::mutex> guard(m_mutex);
     RTPSParticipantImpl* impl = RTPSDomainImpl::find_local_participant(p->getGuid());
     if (impl)
     {
@@ -323,6 +326,7 @@ RTPSReader* RTPSDomain::createRTPSReader(
         ReaderHistory* rhist,
         ReaderListener* rlisten)
 {
+    std::lock_guard<std::mutex> guard(m_mutex);
     RTPSParticipantImpl* impl = RTPSDomainImpl::find_local_participant(p->getGuid());
     if (impl)
     {
@@ -418,7 +422,6 @@ void RTPSDomainImpl::create_participant_guid(
 RTPSParticipantImpl* RTPSDomainImpl::find_local_participant(
         const GUID_t& guid)
 {
-    std::lock_guard<std::mutex> guard(RTPSDomain::m_mutex);
     for (const RTPSDomain::t_p_RTPSParticipant& participant : RTPSDomain::m_RTPSParticipants)
     {
         if (participant.second->getGuid().guidPrefix == guid.guidPrefix)
